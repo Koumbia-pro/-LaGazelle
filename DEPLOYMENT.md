@@ -51,3 +51,18 @@ Ajouter à Nginx une limitation des tentatives sur `/admin/login/`, en compléme
 ## Maintenance
 
 Avant une mise à jour, sauvegarder la base et les médias, déployer les migrations, collecter les fichiers statiques et redémarrer Gunicorn. Vérifier le résultat, puis garder la sauvegarde précédente disponible selon la procédure de restauration du serveur.
+
+## Déploiement sur o2switch avec cPanel
+
+o2switch utilise `Setup Python App` et Passenger pour relier une application Python à un domaine. Le dépôt GitHub peut être cloné avec `Git Version Control`, puis mis à jour depuis l’onglet `Pull or Deploy`.
+
+1. Dans cPanel, créer le domaine `lagazelle.media` et vérifier qu’il pointe vers o2switch.
+2. Dans `Git Version Control`, cloner `https://github.com/Koumbia-pro/-LaGazelle.git` dans un dossier privé à la racine du compte, par exemple `/home/COMPTE/lagazelle-app`. Pour un dépôt GitHub privé, configurer une clé SSH avant le clonage.
+3. Dans `Setup Python App`, choisir Python 3.12, le même `Application Root`, l’URL `https://lagazelle.media`, le fichier de démarrage `config/wsgi.py` et le point d’entrée `application`.
+4. Créer une base MariaDB et un utilisateur dans `MySQL Databases`, puis installer `requirements.txt` dans l’environnement Python. Pour Django 5.2, utiliser `DB_ENGINE=django.db.backends.mysql`, `DB_HOST=localhost`, ainsi que les identifiants créés dans cPanel.
+5. Définir les variables de production dans `Setup Python App`, notamment `DJANGO_SETTINGS_MODULE=config.settings.production`, `SECRET_KEY`, `DEBUG=False`, `ALLOWED_HOSTS=lagazelle.media,www.lagazelle.media`, `CSRF_TRUSTED_ORIGINS=https://lagazelle.media,https://www.lagazelle.media`, le SMTP, hCaptcha et `PROJECT_NOTIFICATION_EMAIL`.
+6. Définir `MEDIA_ROOT` vers un dossier du document root du domaine, par exemple `/home/COMPTE/lagazelle.media/media`, afin qu’Apache puisse servir les images publiques. Ne jamais placer le code source dans ce document root. Le sous-dossier `media/project-requests/` doit rester interdit par la configuration Apache/cPanel.
+7. Dans le terminal cPanel, depuis l’`Application Root`, exécuter `python manage.py migrate`, `python manage.py seed_demo`, `python manage.py createcachetable django_cache`, `python manage.py collectstatic --noinput`, puis créer le compte avec `python manage.py createsuperuser`.
+8. Activer le certificat Let’s Encrypt pour `lagazelle.media` et `www.lagazelle.media`, redémarrer l’application Python, puis vérifier le site, l’administration, les e-mails, hCaptcha et les médias avant d’activer l’indexation.
+
+Pour les mises à jour, utiliser `Update from Remote`, relancer les migrations si nécessaire, exécuter `collectstatic --noinput` et redémarrer l’application dans `Setup Python App`.
