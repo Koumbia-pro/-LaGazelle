@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Conseils marketing et digitalisation des PME | La Gazelle{% endblock %}
+{% block meta_description %}Des conseils concrets pour les PME en marketing, contenus, réseaux sociaux, digitalisation, intelligence artificielle et protection numérique.{% endblock %}
+{% block structured_data %}<script type="application/ld+json">{{ faq_schema|safe }}</script>{% endblock %}
+{% block content %}
+<section class="page-hero advice-hero">
+  <div class="container advice-hero-grid">
+    <div class="advice-hero-copy">
+      <p class="eyebrow eyebrow-orange">Conseils</p>
+      <h1>Des repères concrets pour vos <span>décisions digitales.</span></h1>
+      <p class="page-intro">Marketing, réseaux sociaux, outils, IA et protection de votre présence en ligne : retrouvez des conseils pour mieux comprendre vos options et faire avancer votre entreprise.</p>
+    </div>
+    <div class="advice-hero-art">
+      <img src="{% static 'images/maquette1/conseils-bureau.png' %}" width="564" height="260" fetchpriority="high" alt="Un ordinateur, un carnet et un téléphone sur un bureau lumineux, avec la signature L’Élan des Marques.">
+    </div>
+  </div>
+</section>
+
+<section class="advice-shortcuts-section" aria-label="Conseils par priorité">
+  <div class="container advice-shortcut-grid">
+    <a href="{% url 'expertises:detail' slug='audit-digital-strategie-marketing' %}"><span class="card-icon" aria-hidden="true">{% include 'services/_expertise_icon.html' with icon='chart' %}</span><strong>Stratégie marketing</strong><span aria-hidden="true">→</span></a>
+    <a href="{% url 'expertises:detail' slug='reseaux-sociaux-contenus' %}"><span class="card-icon" aria-hidden="true">{% include 'services/_expertise_icon.html' with icon='users' %}</span><strong>Réseaux sociaux et contenus</strong><span aria-hidden="true">→</span></a>
+    <a href="{% url 'expertises:detail' slug='digitalisation-pme-solutions-web' %}"><span class="card-icon" aria-hidden="true">{% include 'services/_expertise_icon.html' with icon='laptop' %}</span><strong>Digitalisation et IA</strong><span aria-hidden="true">→</span></a>
+    <a href="{% url 'expertises:detail' slug='cybersecurite-protection-acces' %}"><span class="card-icon" aria-hidden="true">{% include 'services/_expertise_icon.html' with icon='shield' %}</span><strong>Image et sécurité numérique</strong><span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<section class="section advice-feature-section" id="articles" aria-labelledby="advice-feature-heading">
+  <div class="container">
+    {% if articles %}
+      {% with featured_article=articles.0 %}
+      <article class="advice-feature-card">
+        {% if featured_article.image %}<img src="{{ featured_article.image.url }}" width="425" height="200" loading="lazy" decoding="async" alt="{{ featured_article.image_alt }}">{% else %}<img src="{% static 'images/maquette1/article-conseils-pme.png' %}" width="425" height="200" loading="lazy" decoding="async" alt="Illustration d’une professionnelle consultant un document et travaillant sur son ordinateur.">{% endif %}
+        <div class="advice-feature-copy"><p class="eyebrow eyebrow-orange">{{ featured_article.get_category_display }}</p><h2 id="advice-feature-heading">{{ featured_article.title }}</h2><p>{{ featured_article.excerpt }}</p><a class="text-link" href="{{ featured_article.get_absolute_url }}">Lire l’article <span aria-hidden="true">→</span></a></div>
+      </article>
+      {% endwith %}
+      {% if articles|length > 1 %}<div class="more-advice"><div class="section-heading"><div><p class="eyebrow eyebrow-orange">À lire aussi</p><h2>Plus de conseils pour vos projets.</h2></div></div><div class="article-grid">{% for article in articles %}{% if not forloop.first %}<article class="article-card"><p class="eyebrow">{{ article.get_category_display }}{% if article.published_at %} · {{ article.published_at|date:'j F Y' }}{% endif %}</p><h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3><p>{{ article.excerpt }}</p><a class="text-link" href="{{ article.get_absolute_url }}">Lire l’article <span aria-hidden="true">→</span></a></article>{% endif %}{% endfor %}</div></div>{% endif %}
+    {% elif featured_faq %}
+      <article class="advice-feature-card advice-feature-faq">
+        <img src="{% static 'images/maquette1/article-conseils-pme.png' %}" width="425" height="200" loading="lazy" decoding="async" alt="Illustration d’une professionnelle consultant un document et travaillant sur son ordinateur.">
+        <div class="advice-feature-copy"><p class="eyebrow eyebrow-orange">Question fréquente</p><h2 id="advice-feature-heading">{{ featured_faq.question }}</h2><p>{{ featured_faq.answer|truncatewords:34 }}</p><a class="text-link" href="#faq-question-{{ featured_faq.pk }}">Voir la réponse <span aria-hidden="true">→</span></a></div>
+      </article>
+    {% else %}
+      <div class="advice-empty-card"><p class="eyebrow eyebrow-orange">Conseils</p><h2 id="advice-feature-heading">Les prochains repères sont en préparation.</h2><p>En attendant, découvrez les expertises de La Gazelle ou présentez-nous votre besoin.</p><a class="text-link" href="{% url 'expertises:list' %}">Voir les expertises <span aria-hidden="true">→</span></a></div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section faq-section advice-faq-section" id="faq" aria-labelledby="faq-heading">
+  <div class="container">
+    <div class="section-heading faq-toolbar">
+      <div><p class="eyebrow eyebrow-orange">Questions fréquentes</p><h2 id="faq-heading">Des réponses claires à vos questions.</h2></div>
+      <div class="faq-tools"><a class="text-link" href="{% url 'faq:list' %}">Voir toutes les questions <span aria-hidden="true">→</span></a><label class="faq-search"><span aria-hidden="true">⌕</span><span class="sr-only">Rechercher dans les questions</span><input id="faq-search" type="search" placeholder="Rechercher une question…" autocomplete="off"></label></div>
+    </div>
+    <div class="faq-content" id="faq-list">
+      {% for category in faq_categories %}
+      <section class="faq-category" id="faq-{{ category.slug }}" data-faq-category>
+        <h3 class="faq-category-heading">{{ category.name }}</h3>
+        <div class="faq-items">
+          {% for item in category.items.all %}<details class="faq-item" id="faq-question-{{ item.pk }}" data-faq-item data-search="{{ category.name }} {{ item.question }} {{ item.answer }}"><summary>{{ item.question }}<span aria-hidden="true">+</span></summary><div><p>{{ item.answer }}</p></div></details>{% endfor %}
+        </div>
+      </section>
+      {% empty %}<p class="empty-state">Les réponses fréquentes seront publiées après validation.</p>{% endfor %}
+      <p class="faq-no-results" id="faq-no-results" hidden>Aucune question ne correspond à votre recherche.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band advice-cta">
+  <div class="container cta-layout"><div><p class="eyebrow">Un besoin précis pour votre PME&nbsp;?</p><h2>Parlons de vos priorités.</h2><p>Nous pouvons vous accompagner avec des conseils adaptés à votre projet.</p></div><a class="button button-primary track-cta" data-track-event="primary_cta" href="{% url 'contact:project' %}?service=advice">Parlons de votre projet <span aria-hidden="true">→</span></a></div>
+</section>
+{% endblock %}

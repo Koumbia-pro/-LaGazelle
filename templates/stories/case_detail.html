@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ case.meta_title|default:case.title }}{% endblock %}
+{% block meta_description %}{{ case.meta_description|default:case.objective }}{% endblock %}
+{% block og_title %}{{ case.meta_title|default:case.title }}{% endblock %}
+{% block og_description %}{{ case.meta_description|default:case.objective }}{% endblock %}
+{% block content %}
+<article class="case-page"><header class="page-hero"><div class="container narrow"><p class="eyebrow eyebrow-orange"><a href="{% url 'stories:cases' %}">Réalisations</a>{% if case.client_name and case.client_name_authorized %} · {{ case.client_name }}{% endif %}</p><h1>{{ case.title }}</h1><p class="page-intro">{{ case.objective }}</p>{% if case.image and case.image_authorized %}<img class="page-hero-image" src="{{ case.image.url }}" loading="lazy" decoding="async" alt="{{ case.image_alt }}">{% endif %}{% if case.client_logo and case.client_logo_authorized %}<img class="case-client-logo" src="{{ case.client_logo.url }}" loading="lazy" decoding="async" alt="{{ case.client_logo_alt }}">{% endif %}</div></header>
+  <div class="section"><div class="container narrow case-content">
+    <section><h2>Contexte</h2><div class="rich-copy">{{ case.context|linebreaks }}</div></section>
+    <section><h2>Notre intervention</h2><div class="rich-copy">{{ case.intervention|linebreaks }}</div><p><strong>Période :</strong> {{ case.period }}</p></section>
+    <section><h2>Livrables</h2><div class="rich-copy">{{ case.deliverables|linebreaks }}</div></section>
+    {% if case.results %}<section><h2>Résultats documentés</h2><div class="rich-copy">{{ case.results|linebreaks }}</div><p class="result-method"><strong>Méthode de mesure :</strong> {{ case.result_method }}</p></section>{% endif %}
+    <section><h2>Enseignement</h2><div class="rich-copy">{{ case.lesson|linebreaks }}</div></section>
+    {% if case.quote and case.quote_authorized %}<blockquote class="case-quote">{{ case.quote|linebreaks }}</blockquote>{% endif %}
+  </div></div>
+  <section class="cta-band"><div class="container cta-layout"><div><p class="eyebrow">Votre projet</p><h2>Vous avez un besoin similaire ?</h2></div><a class="button button-primary track-cta" data-track-event="primary_cta" href="{% url 'contact:project' %}">Parlons-en <span aria-hidden="true">↗</span></a></div></section>
+</article>
+{% endblock %}

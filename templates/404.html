@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block title %}Page introuvable | La Gazelle{% endblock %}
+{% block robots_content %}noindex,nofollow{% endblock %}
+{% block content %}<section class="page-hero error-page"><div class="container"><p class="eyebrow">Erreur 404</p><h1>Cette page est introuvable.</h1><p class="page-intro">Le lien a peut-être changé. Retrouvez nos expertises ou revenez à l’accueil pour poursuivre votre visite.</p><div class="button-row"><a class="button button-primary" href="{% url 'pages:home' %}">Revenir à l’accueil</a><a class="button button-secondary" href="{% url 'expertises:list' %}">Découvrir nos expertises</a></div></div></section>{% endblock %}

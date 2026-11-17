@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} — La Gazelle{% endblock %}
+{% block meta_description %}{{ intro }}{% endblock %}
+{% block robots_content %}{% if legal_page_pending %}noindex,nofollow{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="eyebrow eyebrow-accent">Informations réglementaires</p><h1>{{ title }}</h1><p>{{ intro }}</p></div></section>
+{% if legal_page_pending %}
+<section class="section"><div class="container narrow"><div class="empty-state" role="status"><strong>Page en cours de validation</strong><p>{{ pending_message }}</p></div></div></section>
+{% else %}
+<section class="section"><div class="container narrow rich-copy">{{ content|linebreaks }}</div></section>
+{% endif %}
+{% endblock %}

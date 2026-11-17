@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Questions fréquentes sur le marketing digital | La Gazelle{% endblock %}
+{% block meta_description %}Réponses aux questions fréquentes sur les expertises, la méthode et l’accompagnement de La Gazelle.{% endblock %}
+{% block structured_data %}<script type="application/ld+json">{{ faq_schema|safe }}</script>{% endblock %}
+{% block content %}
+<section class="page-hero faq-hero"><div class="container"><p class="eyebrow eyebrow-orange">Questions fréquentes</p><h1>Des réponses claires pour vos décisions digitales.</h1><p class="page-intro">Retrouvez les réponses sur nos expertises, notre méthode et les solutions digitales proposées aux PME.</p></div></section>
+<section class="section faq-section"><div class="container"><div class="faq-toolbar"><div><p class="eyebrow eyebrow-orange">Explorer</p><h2>Questions et réponses.</h2></div><label class="faq-search"><span aria-hidden="true">⌕</span><span class="sr-only">Rechercher dans la FAQ</span><input id="faq-search" type="search" placeholder="Rechercher une question…" autocomplete="off"></label></div>
+  <div class="faq-layout"><aside class="faq-index-card" aria-label="Catégories de questions">{% for category in categories %}<a href="#faq-{{ category.slug }}">{{ category.name }}</a>{% endfor %}</aside><div class="faq-content" id="faq-list">{% for category in categories %}<section class="faq-category" id="faq-{{ category.slug }}" data-faq-category><h3>{{ category.name }}</h3><div class="faq-items">{% for item in category.public_items %}<details class="faq-item" data-faq-item data-search="{{ category.name }} {{ item.question }} {{ item.answer }}"><summary>{{ item.question }}<span aria-hidden="true">+</span></summary><div><p>{{ item.answer }}</p></div></details>{% endfor %}</div></section>{% empty %}<p class="empty-state">Aucune question n’est publiée pour le moment.</p>{% endfor %}<p class="faq-no-results" id="faq-no-results" hidden>Aucune question ne correspond à votre recherche.</p></div></div>
+  <p class="faq-contact">Vous ne trouvez pas votre réponse ? <a href="{% url 'stories:advice' %}#faq">Voir Conseils et FAQ</a>.</p>
+</div></section>
+{% endblock %}

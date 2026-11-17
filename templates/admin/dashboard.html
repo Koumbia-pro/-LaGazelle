@@ -1,0 +1,84 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% block title %}Tableau de bord{% endblock %}
+{% block content %}
+<div class="admin-shell">
+  <div class="admin-breadcrumb" aria-label="Fil d’Ariane"><span>Administration</span><b>/</b><strong>Tableau de bord</strong></div>
+
+  <header class="admin-hero">
+    <div class="admin-hero-copy">
+      <p class="admin-kicker">Espace de pilotage</p>
+      <h1>Bonjour, {{ request.user.get_full_name|default:request.user.username }}.</h1>
+      <p>Une vue claire pour piloter vos demandes, vos contenus et la présence digitale de La Gazelle.</p>
+      <div class="admin-hero-meta">
+        <span class="admin-role"><i aria-hidden="true"></i>{{ role_label }}</span>
+        <span class="admin-updated">Actualisé le {{ dashboard_updated_at|date:'d/m/Y à H:i' }}</span>
+      </div>
+    </div>
+    <div class="admin-hero-actions">
+      <a class="admin-button admin-button-primary" href="{{ public_site_url }}" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> Voir le site</a>
+      {% if project_access %}<a class="admin-button admin-button-light" href="{% url 'admin:contact_projectrequest_changelist' %}">Demandes commerciales</a>{% endif %}
+      <form action="{% url 'admin:logout' %}" method="post">{% csrf_token %}<button class="admin-button admin-button-outline" type="submit">Se déconnecter</button></form>
+    </div>
+  </header>
+
+  {% if project_access and project_stats %}
+  <section class="admin-overview" aria-labelledby="overview-title">
+    <div class="admin-section-heading">
+      <div><p class="admin-kicker">Vue d’ensemble</p><h2 id="overview-title">L’activité commerciale en un coup d’œil</h2></div>
+      <span class="admin-section-note">{{ project_stats.this_month }} demande{{ project_stats.this_month|pluralize }} ce mois-ci</span>
+    </div>
+    <div class="admin-stats">
+      <article class="admin-stat-card admin-stat-card-total">
+        <div class="admin-stat-top"><span class="admin-stat-icon" aria-hidden="true">▣</span><span class="admin-stat-label">Portefeuille total</span></div>
+        <strong>{{ project_stats.total }}</strong><small>Demandes de projet reçues</small>
+        <a href="{% url 'admin:contact_projectrequest_changelist' %}">Ouvrir le portefeuille <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="admin-stat-card admin-stat-card-new">
+        <div class="admin-stat-top"><span class="admin-stat-icon" aria-hidden="true">!</span><span class="admin-stat-label">À traiter</span></div>
+        <strong>{{ project_stats.new }}</strong><small>Nouvelles demandes</small>
+        <a href="{% url 'admin:contact_projectrequest_changelist' %}?status__exact=new">Voir les nouvelles <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="admin-stat-card admin-stat-card-progress">
+        <div class="admin-stat-top"><span class="admin-stat-icon" aria-hidden="true">↻</span><span class="admin-stat-label">Pipeline actif</span></div>
+        <strong>{{ project_stats.in_progress }}</strong><small>Demandes en cours de traitement</small>
+        <a href="{% url 'admin:contact_projectrequest_changelist' %}?status__exact=in_progress">Suivre le pipeline <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="admin-stat-card admin-stat-card-success">
+        <div class="admin-stat-top"><span class="admin-stat-icon" aria-hidden="true">✓</span><span class="admin-stat-label">Traitées</span></div>
+        <strong>{{ project_stats.treated }}</strong><small>Demandes clôturées par l’équipe</small>
+        <a href="{% url 'admin:contact_projectrequest_changelist' %}?status__exact=treated">Voir les demandes traitées <span aria-hidden="true">↗</span></a>
+      </article>
+    </div>
+  </section>
+  {% endif %}
+
+  <div class="admin-dashboard-grid">
+    <main class="admin-dashboard-main">
+      {% if project_access %}
+      <section class="admin-panel admin-project-panel" aria-labelledby="recent-projects-title">
+        <div class="admin-panel-heading"><div><p class="admin-kicker">Suivi commercial</p><h2 id="recent-projects-title">Demandes récentes</h2><p class="admin-panel-subtitle">Les derniers contacts à qualifier par votre équipe.</p></div><a class="admin-text-link" href="{% url 'admin:contact_projectrequest_changelist' %}">Toutes les demandes <span aria-hidden="true">↗</span></a></div>
+        {% if recent_projects %}
+        <div class="admin-table-wrap"><table class="admin-table"><caption class="sr-only">Les six demandes de projet les plus récentes</caption><thead><tr><th scope="col">Demandeur</th><th scope="col">Service</th><th scope="col">Statut</th><th scope="col">Reçue le</th></tr></thead><tbody>{% for project in recent_projects %}<tr><td><a href="{% url 'admin:contact_projectrequest_change' project.pk %}"><span class="admin-avatar" aria-hidden="true">{{ project.first_name|slice:':1' }}{{ project.last_name|slice:':1' }}</span><span class="admin-table-person"><strong>{{ project.first_name }} {{ project.last_name }}</strong>{% if project.company %}<small>{{ project.company }}</small>{% endif %}</span></a></td><td><span class="admin-service-name">{{ project.service }}</span></td><td><span class="status-pill status-{{ project.status }}"><i aria-hidden="true"></i>{{ project.get_status_display }}</span></td><td><time datetime="{{ project.created_at|date:'c' }}">{{ project.created_at|date:'d/m/Y H:i' }}</time></td></tr>{% endfor %}</tbody></table></div>
+        {% else %}<div class="admin-empty admin-empty-large"><span class="admin-empty-icon" aria-hidden="true">✓</span><strong>Votre pipeline est vide</strong><p>Les nouvelles demandes de projet apparaîtront ici dès leur réception.</p><a class="admin-text-link" href="{% url 'admin:contact_projectrequest_changelist' %}">Accéder aux demandes <span aria-hidden="true">↗</span></a></div>{% endif %}
+      </section>
+      {% endif %}
+
+      <section class="admin-panel admin-content-panel" aria-labelledby="content-title">
+        <div class="admin-panel-heading"><div><p class="admin-kicker">Gestion du site</p><h2 id="content-title">Bibliothèque de contenus</h2><p class="admin-panel-subtitle">Modifiez les informations visibles sur le site public.</p></div><span class="admin-count-badge">{{ content_cards|length }} espace{{ content_cards|length|pluralize }} accessible{{ content_cards|length|pluralize }}</span></div>
+        {% for group in content_groups %}<div class="admin-content-group"><div class="admin-group-heading"><p class="admin-group-label">{{ group.label }}</p><span>{{ group.cards|length }} espace{{ group.cards|length|pluralize }}</span></div><div class="admin-content-grid">{% for card in group.cards %}<a class="admin-content-card" href="{{ card.url }}"><span class="admin-content-icon" aria-hidden="true">{{ card.icon }}</span><span class="admin-content-copy"><strong>{{ card.label }}</strong><small>{{ card.description }}</small></span><span class="admin-content-count">{{ card.count }}</span><span class="admin-card-arrow" aria-hidden="true">↗</span></a>{% endfor %}</div></div>{% empty %}<div class="admin-empty"><strong>Aucun espace accessible</strong><p>Les permissions de ce compte ne donnent accès à aucun contenu.</p></div>{% endfor %}
+      </section>
+    </main>
+
+    <aside class="admin-dashboard-aside">
+      {% if quick_actions %}<section class="admin-panel admin-quick-panel" aria-labelledby="quick-title"><div class="admin-panel-heading"><div><p class="admin-kicker">Raccourcis</p><h2 id="quick-title">Actions rapides</h2><p class="admin-panel-subtitle">Gagnez du temps sur les tâches fréquentes.</p></div></div><div class="admin-quick-links">{% for action in quick_actions %}<a href="{{ action.url }}"><span>{{ action.label|cut:'Ajouter — ' }}</span><b aria-hidden="true">+</b></a>{% endfor %}</div></section>{% endif %}
+
+      {% if project_access %}<section class="admin-panel admin-pipeline-panel" aria-labelledby="pipeline-title"><div class="admin-panel-heading"><div><p class="admin-kicker">Pipeline</p><h2 id="pipeline-title">Répartition des demandes</h2></div><span class="admin-panel-icon" aria-hidden="true">◔</span></div><div class="admin-status-list">{% for status in status_breakdown %}<div class="admin-status-row"><div class="admin-status-line"><span><i class="status-dot status-dot-{{ status.key }}" aria-hidden="true"></i>{{ status.label }}</span><strong>{{ status.count }}</strong></div><div class="admin-progress" aria-label="{{ status.label }} : {{ status.percent }} %"><span class="status-bar-{{ status.key }}" style="width: {{ status.percent }}%;"></span></div></div>{% endfor %}</div></section>{% endif %}
+
+      {% if audit_access %}<section class="admin-panel admin-activity-panel" aria-labelledby="activity-title"><div class="admin-panel-heading"><div><p class="admin-kicker">Traçabilité</p><h2 id="activity-title">Activité récente</h2></div><a class="admin-text-link" href="{% url 'admin:core_auditlog_changelist' %}">Journal <span aria-hidden="true">↗</span></a></div><div class="admin-activity-list">{% for activity in recent_activity %}<div class="admin-activity-item"><span class="activity-dot" aria-hidden="true"></span><p><strong>{{ activity.action|capfirst }}</strong><small>{{ activity.object_repr }}</small><span class="admin-activity-meta">{% if activity.user %}{{ activity.user.username }}{% else %}Système{% endif %} · <time datetime="{{ activity.created_at|date:'c' }}">{{ activity.created_at|date:'d/m H:i' }}</time></span></p></div>{% empty %}<p class="admin-empty">Aucune activité enregistrée.</p>{% endfor %}</div></section>{% endif %}
+    </aside>
+  </div>
+
+  <footer class="admin-dashboard-footer"><span class="admin-footer-mark">G</span><p><strong>La Gazelle — Espace d’administration</strong><small>Les contenus publiés ici sont visibles sur le site public.</small></p><a href="{{ public_site_url }}" target="_blank" rel="noopener">Ouvrir le site public <span aria-hidden="true">↗</span></a></footer>
+</div>
+{% endblock %}

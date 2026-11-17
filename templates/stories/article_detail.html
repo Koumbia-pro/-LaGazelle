@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ article.meta_title|default:article.title }}{% endblock %}
+{% block meta_description %}{{ article.meta_description|default:article.excerpt }}{% endblock %}
+{% block og_title %}{{ article.meta_title|default:article.title }}{% endblock %}
+{% block og_description %}{{ article.meta_description|default:article.excerpt }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block structured_data %}<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"{{ article.title|escapejs }}","description":"{{ article.excerpt|escapejs }}","datePublished":"{{ article.published_at|date:'c' }}","author":{"@type":"Person","name":"{{ article.author|escapejs }}"},"mainEntityOfPage":"{{ canonical_url|escapejs }}"}</script>{% endblock %}
+{% block content %}
+<article class="article-page">
+  <header class="page-hero article-hero"><div class="container narrow"><p class="eyebrow eyebrow-orange"><a href="{% url 'stories:advice' %}">Conseils</a> <span aria-hidden="true">›</span> {{ article.get_category_display }}</p><h1>{{ article.title }}</h1><p class="page-intro">{{ article.excerpt }}</p><p class="article-byline">{{ article.author }}{% if article.published_at %} · <time datetime="{{ article.published_at|date:'Y-m-d' }}">{{ article.published_at|date:'j F Y' }}</time>{% endif %}</p>{% if article.image %}<img class="page-hero-image" src="{{ article.image.url }}" loading="lazy" decoding="async" alt="{{ article.image_alt }}">{% else %}<img class="page-hero-image" src="{% static 'images/maquette1/article-conseils-pme.png' %}" width="425" height="200" loading="lazy" decoding="async" alt="Illustration d’une professionnelle consultant un document et travaillant sur son ordinateur.">{% endif %}</div></header>
+  <div class="section article-body"><div class="container narrow rich-copy">{% if article.content %}{{ article.content|linebreaks }}{% endif %}{% for section in article.sections.all %}<section><h2>{{ section.heading }}</h2>{{ section.content|linebreaks }}</section>{% endfor %}</div></div>
+  <section class="cta-band"><div class="container cta-layout"><div><p class="eyebrow">À mettre en pratique</p><h2>Vous souhaitez identifier votre première priorité ?</h2></div><a class="button button-primary track-cta" data-track-event="primary_cta" href="{% url 'expertises:detail' slug='audit-digital-strategie-marketing' %}">Découvrir l’audit digital <span aria-hidden="true">↗</span></a></div></section>
+</article>
+{% endblock %}

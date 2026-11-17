@@ -1,0 +1,115 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="robots" content="{% block robots_content %}{% if not search_indexing_enabled or preview %}noindex,nofollow{% else %}index,follow{% endif %}{% endblock %}">
+  <link rel="icon" href="{% static 'images/la-gazelle-mark.png' %}" type="image/png">
+  <title>{% block title %}La Gazelle | Stratégie marketing et expertise digitale{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}La Gazelle accompagne les PME en stratégie marketing, contenus, digitalisation et présence en ligne.{% endblock %}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta property="og:title" content="{% block og_title %}La Gazelle | Stratégie marketing et expertise digitale{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Un accompagnement digital des PME, du diagnostic à la mise en œuvre.{% endblock %}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:site_name" content="La Gazelle">
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/maquette1/02_visuel_gazelle_hero.png' %}">
+  <meta property="og:image:alt" content="La Gazelle, l’Élan des Marques">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "{{ site_settings.site_name|default:'La Gazelle'|escapejs }}",
+    "url": "{{ request.scheme }}://{{ request.get_host|escapejs }}",
+    "logo": "{{ request.scheme }}://{{ request.get_host|escapejs }}{% static 'images/la-gazelle-mark.png' %}",
+    "description": "Cabinet d’expertise digitale et de stratégie marketing au service des PME.",
+    "address": {"@type": "PostalAddress", "addressLocality": "Ouagadougou", "addressCountry": "BF"}
+  }</script>
+  {% block structured_data %}{% endblock %}
+  {% block extra_head %}{% endblock %}
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+<body data-event-endpoint="{% url 'conversion-event' %}" data-search-indexing="{{ search_indexing_enabled|yesno:'yes,no' }}">
+  <a class="skip-link" href="#main-content">Aller au contenu</a>
+  {% if preview %}<div class="preview-notice" role="status">Aperçu privé — ce contenu n’est pas publié.</div>{% endif %}
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <span>{{ site_settings.site_location|default:'Ouagadougou, Burkina Faso' }}</span>
+      <div class="topbar-contact">
+        {% if site_settings.site_email %}<a href="mailto:{{ site_settings.site_email }}"><span aria-hidden="true">✉</span>{{ site_settings.site_email }}</a>{% endif %}
+        {% if site_settings.site_phone_standard %}<a data-track-event="phone_click" href="tel:{{ phone_uri }}"><span aria-hidden="true">☎</span>{{ site_settings.site_phone_standard }}</a>{% endif %}
+        {% if site_settings.site_whatsapp %}<a data-track-event="whatsapp_click" href="https://wa.me/{{ whatsapp_uri }}" target="_blank" rel="noopener"><span aria-hidden="true">◉</span>{{ site_settings.site_whatsapp }}</a>{% endif %}
+        {% for social in social_links %}<a class="topbar-social" href="{{ social.url }}" target="_blank" rel="noopener noreferrer">{{ social.platform }}</a>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="{% url 'pages:home' %}" aria-label="La Gazelle, accueil">
+        <img class="brand-logo" src="{% static 'images/la-gazelle-emblem.png' %}" width="358" height="342" alt="">
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
+        <span></span><span></span><span></span><span class="sr-only">Ouvrir le menu</span>
+      </button>
+      <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+        <a href="{% url 'pages:home' %}"{% if request.path == '/' %} aria-current="page"{% endif %}>Accueil</a>
+        <a href="{% url 'expertises:list' %}"{% if request.path|slice:':12' == '/expertises/' %} aria-current="page"{% endif %}>Expertises</a>
+        <a href="{% url 'pages:about' %}"{% if request.path == '/le-cabinet/' %} aria-current="page"{% endif %}>Le cabinet</a>
+        <a href="{% url 'stories:cases' %}"{% if request.path|slice:':14' == '/realisations/' %} aria-current="page"{% endif %}>Réalisations</a>
+        <a href="{% url 'stories:advice' %}"{% if request.path|slice:':10' == '/conseils/' %} aria-current="page"{% endif %}>Conseils</a>
+        <a class="nav-cta track-cta" href="{% url 'contact:project' %}">Parlons de votre projet <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content">{% block content %}{% endblock %}</main>
+  <footer class="site-footer">
+    <div class="container footer-grid{% if social_links %} has-social{% else %} no-social{% endif %}">
+      <div class="footer-brand">
+        <a class="footer-logo" href="{% url 'pages:home' %}" aria-label="La Gazelle, accueil">
+          <img class="footer-emblem" src="{% static 'images/la-gazelle-emblem.png' %}" width="358" height="342" loading="lazy" alt="">
+        </a>
+        <p>Cabinet d’expertise digitale et de stratégie marketing au service des PME.</p>
+        <p class="footer-slogan">La Gazelle, l’Élan des Marques.</p>
+      </div>
+      <div class="footer-links">
+        <h2>Explorer</h2>
+        <a href="{% url 'expertises:list' %}">Nos expertises</a>
+        <a href="{% url 'pages:about' %}">Le cabinet</a>
+        <a href="{% url 'stories:advice' %}">Conseils et FAQ</a>
+        <a href="{% url 'stories:cases' %}">Réalisations</a>
+      </div>
+      <div class="footer-links">
+        <h2>Contact</h2>
+        <a href="{% url 'contact:project' %}" class="track-cta">Présenter votre projet</a>
+        {% if site_settings.site_email %}<a href="mailto:{{ site_settings.site_email }}">{{ site_settings.site_email }}</a>{% endif %}
+        {% if site_settings.site_phone_standard %}<a data-track-event="phone_click" href="tel:{{ phone_uri }}">{{ site_settings.site_phone_standard }}</a>{% endif %}
+        {% if site_settings.site_whatsapp %}<a data-track-event="whatsapp_click" href="https://wa.me/{{ whatsapp_uri }}" target="_blank" rel="noopener">WhatsApp</a>{% endif %}
+        <span>{{ site_settings.site_location|default:'Ouagadougou, Burkina Faso' }}</span>
+      </div>
+      {% if social_links %}<div class="footer-links">
+        <h2>Réseaux sociaux</h2>
+        {% for social in social_links %}<a href="{{ social.url }}" target="_blank" rel="noopener noreferrer">{{ social.platform }}</a>{% endfor %}
+      </div>{% endif %}
+    </div>
+    <div class="container footer-bottom">
+      <span>© {% now "Y" %} La Gazelle.</span>
+      <div>
+        <a href="{% url 'pages:legal-notice' %}">Mentions légales</a>
+        <a href="{% url 'pages:privacy' %}">Confidentialité</a>
+        <button type="button" class="text-button" data-manage-consent>Gérer mes préférences</button>
+      </div>
+    </div>
+  </footer>
+  <section class="consent-banner" id="consent-banner" aria-label="Préférences de mesure d’audience" hidden>
+    <div><p class="eyebrow">Votre choix</p><h2>Mesure d’audience</h2><p>Les mesures facultatives restent désactivées tant que vous ne les acceptez pas. Elles ne collectent pas le contenu de vos messages, votre e-mail ou votre numéro.</p></div>
+    <div class="consent-actions">
+      <button type="button" class="button button-outline" data-consent-refuse>Continuer sans mesure</button>
+      <button type="button" class="button button-primary" data-consent-accept>Accepter la mesure</button>
+    </div>
+  </section>
+  <script src="{% static 'js/site.js' %}" defer></script>
+</body>
+</html>

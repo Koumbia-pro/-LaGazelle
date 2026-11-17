@@ -1,0 +1,23 @@
+[Unit]
+Description=La Gazelle Gunicorn application
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/srv/la-gazelle
+EnvironmentFile=/etc/la-gazelle/la-gazelle.env
+RuntimeDirectory=la-gazelle
+RuntimeDirectoryMode=0750
+ExecStart=/srv/la-gazelle/.venv/bin/gunicorn \
+    --workers 3 \
+    --timeout 60 \
+    --access-logfile - \
+    --error-logfile - \
+    --bind unix:/run/la-gazelle/gunicorn.sock \
+    config.wsgi:application
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

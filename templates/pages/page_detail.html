@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}{{ page.meta_title|default:page.title }} — La Gazelle{% endblock %}
+{% block meta_description %}{{ page.meta_description|default:page.intro }}{% endblock %}
+{% block og_title %}{{ page.meta_title|default:page.title }} — La Gazelle{% endblock %}
+{% block og_description %}{{ page.meta_description|default:page.intro }}{% endblock %}
+{% block content %}<section class="page-hero"><div class="container"><p class="eyebrow eyebrow-orange">La Gazelle</p><h1>{{ page.title }}</h1><p class="page-intro">{{ page.intro }}</p>{% if page.image %}<img class="page-hero-image" src="{{ page.image.url }}" loading="lazy" decoding="async" alt="{{ page.image_alt }}">{% endif %}</div></section><section class="section"><div class="container narrow rich-copy">{{ page.content|linebreaks }}</div></section>{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Nos expertises digitales pour PME | La Gazelle{% endblock %}
+{% block meta_description %}Découvrez les huit expertises de La Gazelle pour structurer votre marketing, vos contenus, vos outils numériques et votre présence en ligne.{% endblock %}
+{% block content %}
+<section class="page-hero services-hero">
+  <div class="container service-hero-grid">
+    <div class="service-hero-copy">
+      <p class="eyebrow eyebrow-orange">Cabinet d’expertise digitale et de stratégie marketing</p>
+      <h1>Nos expertises digitales au service de <span>votre PME.</span></h1>
+      <p class="page-intro">Découvrez huit expertises pour structurer votre marketing, vos contenus, vos outils numériques et votre présence en ligne.</p>
+      <a class="button button-primary track-cta" data-track-event="primary_cta" href="{% url 'contact:project' %}">Parlons de votre projet <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="service-hero-art">
+      <img src="{% static 'images/maquette1/02_visuel_gazelle_hero.png' %}" width="585" height="390" fetchpriority="high" alt="La gazelle, emblème de La Gazelle, sur un fond orange et crème évoquant l’élan des marques.">
+    </div>
+  </div>
+</section>
+
+<section class="section services-section" aria-labelledby="services-heading">
+  <div class="container">
+    <div class="section-heading section-heading-centered">
+      <div><p class="eyebrow eyebrow-orange">Nos expertises</p><h2 id="services-heading">Huit leviers pour faire avancer votre activité.</h2></div>
+    </div>
+    <div class="expertise-grid expertise-grid-large">
+      {% for expertise in expertises %}
+      <a id="expertise-{{ expertise.slug }}" class="expertise-card" href="{{ expertise.get_absolute_url }}">
+        <span class="card-icon" aria-hidden="true">{% include 'services/_expertise_icon.html' with expertise=expertise %}</span>
+        <span class="expertise-card-copy"><strong>{{ expertise.name }}</strong><small>{{ expertise.summary }}</small><span class="expertise-discover">Découvrir <span aria-hidden="true">→</span></span></span>
+        <span class="card-arrow" aria-hidden="true">→</span>
+      </a>
+      {% empty %}
+      <p class="empty-state">Les expertises seront présentées dès que leurs contenus auront été validés.</p>
+      {% endfor %}
+    </div>
+
+    <nav class="priority-strip" aria-label="Explorer les expertises par priorité">
+      <a href="{% url 'expertises:detail' slug='audit-digital-strategie-marketing' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18M6 16v-4m5 4V8m5 8v-6m5 6V4"/></svg><span>Visibilité</span></a>
+      <a href="{% url 'expertises:detail' slug='digitalisation-pme-solutions-web' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-2.6v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H6.3v-2.6h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2H15v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2V14h-.2a1.7 1.7 0 0 0-1.5 1Z"/></svg><span>Organisation</span></a>
+      <a href="{% url 'expertises:detail' slug='e-reputation-communication-crise' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 13L3 8l9-5Z"/><path d="m3 8 9 4 9-4M12 12v9"/></svg><span>Image</span></a>
+      <a href="{% url 'expertises:detail' slug='lancement-produits-activation' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17 10 10l4 4 7-8"/><path d="M15 6h6v6M4 21h16"/></svg><span>Croissance</span></a>
+    </nav>
+  </div>
+</section>
+
+<section class="cta-band expertise-cta">
+  <div class="container cta-layout">
+    <div><p class="eyebrow">Un besoin à préciser&nbsp;?</p><h2>Vous hésitez entre plusieurs expertises&nbsp;?</h2><p>Parlons de vos priorités et du cadre adapté à votre projet.</p></div>
+    <a class="button button-primary track-cta" data-track-event="primary_cta" href="{% url 'contact:project' %}?service=advice">Échanger avec La Gazelle <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+{% endblock %}

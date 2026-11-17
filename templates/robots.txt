@@ -1,0 +1,7 @@
+User-agent: *
+{% if search_indexing_enabled %}Allow: /
+Disallow: /admin/
+Disallow: /apercu/
+Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml
+{% else %}Disallow: /
+{% endif %}

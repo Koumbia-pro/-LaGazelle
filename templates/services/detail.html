@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ expertise.meta_title|default:expertise.name }}{% endblock %}
+{% block meta_description %}{{ expertise.meta_description|default:expertise.summary }}{% endblock %}
+{% block og_title %}{{ expertise.meta_title|default:expertise.name }}{% endblock %}
+{% block og_description %}{{ expertise.meta_description|default:expertise.summary }}{% endblock %}
+{% block content %}
+<article class="expertise-page" data-expertise-detail>
+  <section class="page-hero detail-hero"><div class="container">
+    <p class="eyebrow eyebrow-orange"><a href="{% url 'expertises:list' %}">Expertises</a> <span aria-hidden="true">›</span> {{ expertise.name }}</p>
+    <h1>{{ expertise.headline|default:expertise.name }}</h1>
+    <p class="page-intro">{{ expertise.description }}</p>
+    {% if expertise.image %}<img class="page-hero-image" src="{{ expertise.image.url }}" loading="lazy" decoding="async" alt="{{ expertise.image_alt }}">{% endif %}
+  </div></section>
+  <section class="section detail-section"><div class="container detail-layout">
+    <div class="detail-main">
+      <section class="detail-block"><p class="eyebrow eyebrow-orange">Cette expertise vous concerne si</p><p class="lead-copy">{{ expertise.audience_need }}</p></section>
+      <section class="detail-block"><p class="eyebrow eyebrow-orange">Ce que nous faisons</p><ul class="content-list">{% for activity in expertise.activity_list %}<li>{{ activity }}</li>{% endfor %}</ul></section>
+      <section class="detail-block"><p class="eyebrow eyebrow-orange">Ce que vous recevez</p><ul class="deliverable-list">{% for item in expertise.deliverable_list %}<li>{{ item }}</li>{% endfor %}</ul></section>
+      <section class="detail-block outcome-block"><p class="eyebrow eyebrow-orange">Ce que cela vous apporte</p><p>{{ expertise.outcomes }}</p></section>
+      {% if expertise.scope_note %}<aside class="scope-note"><strong>Précisions sur la mission</strong><p>{{ expertise.scope_note|linebreaksbr }}</p></aside>{% endif %}
+      <div class="detail-actions"><a class="button button-primary track-cta" data-track-event="primary_cta" href="{% url 'contact:project' %}?expertise={{ expertise.slug }}">{{ expertise.cta_label|default:'Parlons de votre projet' }} <span aria-hidden="true">↗</span></a><a class="text-link" href="{% url 'expertises:list' %}">Toutes les expertises</a></div>
+    </div>
+    <aside class="detail-side">
+      <p class="eyebrow eyebrow-orange">Pour aller plus loin</p>
+      <h2>Des expertises complémentaires.</h2>
+      {% for related in expertise.related_expertises.all %}<a class="related-link" href="{{ related.get_absolute_url }}"><span>{{ related.name }}</span><b aria-hidden="true">↗</b></a>{% empty %}<p>Découvrez les autres expertises de La Gazelle.</p>{% endfor %}
+      <div class="detail-side-note"><strong>Vous hésitez entre plusieurs besoins&nbsp;?</strong><p>Présentez-nous votre situation. Nous vous aiderons à choisir un point de départ.</p><a href="{% url 'contact:project' %}?service=advice">Être conseillé <span aria-hidden="true">↗</span></a></div>
+    </aside>
+  </div></section>
+  <section class="cta-band"><div class="container cta-layout"><div><p class="eyebrow">Votre besoin</p><h2>Définissons les prochaines actions avec vous.</h2></div><a class="button button-primary track-cta" data-track-event="primary_cta" href="{% url 'contact:project' %}?expertise={{ expertise.slug }}">{{ expertise.cta_label|default:'Parlons de votre projet' }} <span aria-hidden="true">↗</span></a></div></section>
+</article>
+{% endblock %}

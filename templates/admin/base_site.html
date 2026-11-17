@@ -1,0 +1,6 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% block title %}{{ title }} | La Gazelle{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/admin-dashboard.css' %}">{% endblock %}
+{% block branding %}<a class="admin-brand" href="{% url 'admin:index' %}"><span class="admin-brand-logo"><img src="{% static 'images/la-gazelle-logo.png' %}" width="306" height="105" alt=""></span><span class="sr-only">La Gazelle — Administration</span></a>{% endblock %}
+{% block nav-global %}<div id="admin-global-nav"><a href="{% url 'admin:index' %}">Tableau de bord</a><a href="{{ public_site_url|default:'/' }}" target="_blank" rel="noopener">Voir le site ↗</a></div>{% endblock %}

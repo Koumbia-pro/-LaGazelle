@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Parlons de votre projet digital | La Gazelle{% endblock %}
+{% block meta_description %}Présentez votre projet à La Gazelle. Échangeons sur vos besoins en marketing digital, contenus, réseaux sociaux et digitalisation de votre PME.{% endblock %}
+{% block og_title %}Parlons de votre projet digital | La Gazelle{% endblock %}
+{% block og_description %}Expliquez-nous votre activité et vos priorités afin de préparer un premier échange utile.{% endblock %}
+{% block content %}
+<section class="page-hero project-hero"><div class="container"><p class="eyebrow eyebrow-orange">Contact</p><h1>Parlons de votre projet et de vos priorités.</h1><p class="page-intro">Expliquez-nous votre activité, ce que vous souhaitez améliorer et les difficultés que vous rencontrez. Nous prendrons contact avec vous pour préciser votre besoin et envisager la suite.</p></div></section>
+<section class="section contact-section"><div class="container contact-layout">
+  <aside class="contact-aside"><p class="eyebrow eyebrow-orange">Un premier échange utile</p><h2>Vous hésitez entre plusieurs expertises ?</h2><p>Choisissez « Je souhaite être conseillé » et présentez-nous votre situation. Nous vous aiderons à identifier votre priorité.</p><div class="contact-warning"><strong>Pour protéger vos informations</strong><p>Ne communiquez ni mot de passe, ni donnée sensible, ni document confidentiel dans ce formulaire.</p></div><div class="contact-direct"><h3>Vous préférez un échange direct ?</h3>{% if site_settings.site_email %}<a href="mailto:{{ site_settings.site_email }}">{{ site_settings.site_email }}</a>{% endif %}{% if site_settings.site_phone_standard %}<a data-track-event="phone_click" href="tel:{{ phone_uri }}">{{ site_settings.site_phone_standard }}</a>{% endif %}{% if site_settings.site_whatsapp %}<a data-track-event="whatsapp_click" href="https://wa.me/{{ whatsapp_uri }}" target="_blank" rel="noopener">WhatsApp : {{ site_settings.site_whatsapp }}</a>{% endif %}<span>{{ site_settings.site_location|default:'Ouagadougou, Burkina Faso' }}</span></div></aside>
+  <div class="form-column">
+    {% if submitted %}
+      <div class="success-box" role="status" data-track-success><span aria-hidden="true">✓</span><p class="eyebrow eyebrow-orange">Demande enregistrée</p><h2>Votre demande a bien été reçue.</h2><p>Nous vous recontacterons avec les coordonnées indiquées. Votre référence est <strong>{{ confirmation_reference }}</strong>.</p></div>
+    {% elif not form_available %}
+      <div class="form-unavailable" role="status"><h2>Le formulaire sera ouvert après la finalisation de la politique de confidentialité.</h2><p>Les informations transmises doivent être accompagnées d’une information complète sur leur traitement et leur durée de conservation.</p></div>
+    {% else %}
+      <form method="post" class="project-form">
+        {% csrf_token %}{{ form.website }}
+        {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="form-grid">
+          <div class="field field-wide">{{ form.first_name.label_tag }}{{ form.first_name }}{{ form.first_name.errors }}</div>
+          <div class="field field-wide">{{ form.company.label_tag }}{{ form.company }}{{ form.company.errors }}</div>
+          <div class="field">{{ form.email.label_tag }}{{ form.email }}{{ form.email.errors }}{% if form.email.help_text %}<small>{{ form.email.help_text }}</small>{% endif %}</div>
+          <div class="field">{{ form.phone.label_tag }}{{ form.phone }}{{ form.phone.errors }}</div>
+          <div class="field">{{ form.whatsapp.label_tag }}{{ form.whatsapp }}{{ form.whatsapp.errors }}</div>
+          <div class="field">{{ form.service.label_tag }}{{ form.service }}{{ form.service.errors }}</div>
+          <div class="field field-wide">{{ form.description.label_tag }}{{ form.description }}{{ form.description.errors }}<small>{{ form.description.help_text }}</small></div>
+          <div class="field">{{ form.budget.label_tag }}{{ form.budget }}{{ form.budget.errors }}</div>
+          <div class="field">{{ form.deadline.label_tag }}{{ form.deadline }}{{ form.deadline.errors }}</div>
+        </div>
+        <label class="consent-field">{{ form.consent }}<span>J’accepte que les informations saisies servent à traiter ma demande et à me recontacter à ce sujet. {% if privacy_page_available %}<a href="{% url 'pages:privacy' %}">Lire la politique de confidentialité</a>.{% endif %}{{ form.consent.errors }}</span></label>
+        {% if hcaptcha_site_key %}<div class="h-captcha" data-sitekey="{{ hcaptcha_site_key }}"></div><script src="https://js.hcaptcha.com/1/api.js" async defer></script>{% else %}<label class="consent-field captcha-field">{{ form.captcha_confirmed }}<span>{{ form.captcha_confirmed.label }}{{ form.captcha_confirmed.errors }}</span></label>{% endif %}
+        <button class="button button-primary" type="submit">Envoyer ma demande <span aria-hidden="true">↗</span></button>
+      </form>
+    {% endif %}
+  </div>
+</div></section>
+{% endblock %}

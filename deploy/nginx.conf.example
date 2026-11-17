@@ -1,0 +1,68 @@
+# Exemple à adapter : remplacer le domaine et les chemins /srv/la-gazelle.
+# Ce fichier est un modèle de référence, pas une configuration contenant des secrets.
+
+limit_req_zone $binary_remote_addr zone=la_gazelle_admin_login:10m rate=5r/m;
+
+upstream la_gazelle_app {
+    server unix:/run/la-gazelle/gunicorn.sock fail_timeout=0;
+}
+
+server {
+    listen 80;
+    server_name example.com www.example.com;
+
+    # En production, remplacer par une redirection HTTPS après installation du certificat.
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    server_name example.com www.example.com;
+
+    # ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+
+    client_max_body_size 8M;
+
+    location /static/ {
+        alias /srv/la-gazelle/staticfiles/;
+        expires 7d;
+        add_header Cache-Control "public, max-age=604800";
+    }
+
+    # Les pièces jointes commerciales ne doivent jamais être servies directement.
+    location ^~ /media/project-requests/ {
+        deny all;
+        return 404;
+    }
+
+    # Les extensions exécutables ou interprétables ne doivent jamais être servies.
+    location ~* ^/media/.+\.(?:html?|svgz?|xhtml|xml|js|mjs|css|php|mht|mhtml|hta|swf)(?:$|/) {
+        deny all;
+        return 404;
+    }
+
+    location /media/ {
+        alias /srv/la-gazelle/media/;
+        add_header X-Content-Type-Options "nosniff" always;
+    }
+
+    location = /admin/login/ {
+        limit_req zone=la_gazelle_admin_login burst=10 nodelay;
+        include proxy_params;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_pass http://la_gazelle_app;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_pass http://la_gazelle_app;
+    }
+}

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}La Gazelle | Marketing digital et digitalisation des PME{% endblock %}
+{% block meta_description %}La Gazelle accompagne les PME en stratégie marketing, réseaux sociaux, contenus, digitalisation, e-réputation, IA et protection des accès numériques.{% endblock %}
+{% block og_title %}La Gazelle | Marketing digital et digitalisation des PME{% endblock %}
+{% block og_description %}Du diagnostic à la mise en œuvre, La Gazelle aide les PME à structurer leur marketing et leur présence en ligne.{% endblock %}
+{% block content %}
+<section class="hero hero-home">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">Cabinet d’expertise digitale et de stratégie marketing</p>
+      <h1>Le digital au service<br>de la croissance<br>de <span>votre PME.</span></h1>
+      <p class="hero-lead">La Gazelle vous accompagne pour structurer votre marketing, créer vos contenus, gérer vos réseaux sociaux et digitaliser votre activité. Nous vous aidons aussi à valoriser votre expertise, protéger votre image et intégrer l’IA dans vos pratiques.</p>
+      <p class="hero-support">Du diagnostic à la mise en œuvre, nous construisons avec vous des solutions adaptées à vos objectifs, à votre équipe et à votre budget.</p>
+      <div class="button-row">
+        <a class="button button-primary track-cta" data-track-event="primary_cta" href="{% url 'contact:project' %}">Parlons de votre projet <span aria-hidden="true">→</span></a>
+        <a class="button button-secondary" href="{% url 'expertises:list' %}">Découvrir nos expertises <span aria-hidden="true">↓</span></a>
+      </div>
+      <p class="hero-location">{{ site_settings.site_location|default:'Ouagadougou, Burkina Faso' }} <span aria-hidden="true">·</span> PME et entrepreneurs</p>
+    </div>
+    <div class="hero-visual">
+      <img class="hero-gazelle" src="{% static 'images/maquette1/02_visuel_gazelle_hero.png' %}" width="585" height="390" fetchpriority="high" alt="Une gazelle, symbole de l’élan des marques accompagnées par La Gazelle.">
+    </div>
+  </div>
+</section>
+
+<section class="section expertise-preview" id="expertises" aria-labelledby="expertise-heading">
+  <div class="container">
+    <div class="section-heading section-heading-centered">
+      <div><p class="eyebrow eyebrow-orange">Nos expertises</p><h2 id="expertise-heading">Des expertises pour vos priorités.</h2></div>
+    </div>
+    <div class="expertise-grid">
+      {% for expertise in expertises %}
+      <a href="{{ expertise.get_absolute_url }}" class="expertise-card">
+        <span class="card-icon" aria-hidden="true">{% include 'services/_expertise_icon.html' with expertise=expertise %}</span>
+        <span class="expertise-card-copy"><strong>{{ expertise.name }}</strong><small>{{ expertise.summary }}</small></span>
+        <span class="card-arrow" aria-hidden="true">→</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section need-selector-section" aria-labelledby="need-heading">
+  <div class="container">
+    <header class="need-selector-heading">
+      <p class="eyebrow eyebrow-orange">À chaque besoin, sa pièce du puzzle</p>
+      <h2 id="need-heading">Et si on assemblait votre réussite&nbsp;?</h2>
+      <p>Choisissez ce qui vous manque. Construisons la suite ensemble.</p>
+    </header>
+    <div class="need-selector-layout">
+      <div>
+        <div class="need-puzzle-grid" role="group" aria-label="Choisissez votre point de départ">
+          <button class="need-puzzle-piece piece-visibility is-selected" type="button" aria-pressed="true" data-need-choice
+            data-title="Gagner en visibilité" data-description="Faisons le point sur votre présence en ligne et les opportunités de votre marque."
+            data-point-one="Un positionnement clair" data-point-two="Une présence cohérente" data-point-three="Des actions prioritaires"
+            data-cta="Découvrir mon diagnostic" data-href="{% url 'contact:project' %}?expertise=audit-digital-strategie-marketing">
+            <span class="need-piece-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><path d="m9 26 29-10v29L9 35V26Z"/><path d="m20 39 5 15h9l-5-12M39 23l9-6M41 31h13M39 39l9 7"/><path class="icon-accent" d="m48 13 4-7M55 31h6M49 49l5 5"/></svg></span>
+            <span class="need-piece-copy"><strong>Gagner en<br>visibilité</strong><small>Être trouvé et compris</small></span>
+            <span class="need-piece-check" aria-hidden="true">✓</span>
+          </button>
+          <button class="need-puzzle-piece piece-social" type="button" aria-pressed="false" data-need-choice
+            data-title="Animer mes réseaux" data-description="Construisons une présence régulière avec des contenus adaptés à votre activité et à votre audience."
+            data-point-one="Des sujets cohérents" data-point-two="Un rythme réaliste" data-point-three="Des contenus utiles"
+            data-cta="Échanger sur mes réseaux" data-href="{% url 'contact:project' %}?expertise=reseaux-sociaux-contenus">
+            <span class="need-piece-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><rect x="18" y="7" width="28" height="50" rx="6"/><path d="M27 13h10M29 49h6"/><path class="icon-accent" d="M32 31s-7-4-7-8a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4-7 8-7 8ZM51 15l5-4M53 25h7M50 36l5 4"/></svg></span>
+            <span class="need-piece-copy"><strong>Animer<br>mes réseaux</strong><small>Publier avec régularité</small></span>
+            <span class="need-piece-check" aria-hidden="true">✓</span>
+          </button>
+          <button class="need-puzzle-piece piece-organization" type="button" aria-pressed="false" data-need-choice
+            data-title="Mieux m’organiser" data-description="Simplifions vos processus et choisissons les outils qui feront gagner du temps à votre équipe."
+            data-point-one="Des besoins clarifiés" data-point-two="Des outils adaptés" data-point-three="Des habitudes durables"
+            data-cta="Simplifier mon activité" data-href="{% url 'contact:project' %}?expertise=digitalisation-pme-solutions-web">
+            <span class="need-piece-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><rect x="8" y="12" width="48" height="42" rx="5"/><path d="M8 23h48M19 7v11M45 7v11M18 32h7M31 32h7M44 32h4M18 41h7M31 41h7"/><circle class="icon-accent" cx="45" cy="43" r="8"/><path class="icon-accent" d="m42 43 2 2 4-5"/></svg></span>
+            <span class="need-piece-copy"><strong>Mieux<br>m’organiser</strong><small>Simplifier mon quotidien</small></span>
+            <span class="need-piece-check" aria-hidden="true">✓</span>
+          </button>
+          <button class="need-puzzle-piece piece-launch" type="button" aria-pressed="false" data-need-choice
+            data-title="Réussir mon lancement" data-description="Faisons passer votre idée à une offre claire, prête à rencontrer son public."
+            data-point-one="Une offre bien présentée" data-point-two="Une campagne coordonnée" data-point-three="Des résultats mesurables"
+            data-cta="Préparer mon lancement" data-href="{% url 'contact:project' %}?expertise=lancement-produits-activation">
+            <span class="need-piece-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><path d="M36 11c7-7 16-7 20-7 0 5 0 14-7 21L32 42 22 32l14-21Z"/><path d="m32 42-3 12-9-10M22 32l-12 3 10 9M38 14l-8 8"/><circle class="icon-accent" cx="43" cy="18" r="4"/><path class="icon-accent" d="m16 48-7 7M23 51l-2 8M13 41l-8 2"/></svg></span>
+            <span class="need-piece-copy"><strong>Réussir<br>mon lancement</strong><small>Passer de l’idée à l’impact</small></span>
+            <span class="need-piece-check" aria-hidden="true">✓</span>
+          </button>
+          <button class="need-puzzle-piece piece-protection" type="button" aria-pressed="false" data-need-choice
+            data-title="Protéger mon entreprise" data-description="Renforçons votre image, vos données et les accès essentiels à votre activité."
+            data-point-one="Des accès mieux protégés" data-point-two="Des risques mieux compris" data-point-three="Des pratiques plus sûres"
+            data-cta="Protéger mon entreprise" data-href="{% url 'contact:project' %}?expertise=cybersecurite-protection-acces">
+            <span class="need-piece-icon" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none"><path d="m32 6 22 8v16c0 14-9 23-22 29C19 53 10 44 10 30V14l22-8Z"/><rect class="icon-accent" x="24" y="28" width="16" height="13" rx="3"/><path class="icon-accent" d="M28 28v-4a4 4 0 0 1 8 0v4M32 33v3"/></svg></span>
+            <span class="need-piece-copy"><strong>Protéger<br>mon entreprise</strong><small>Image, données et accès</small></span>
+            <span class="need-piece-check" aria-hidden="true">✓</span>
+          </button>
+        </div>
+        <p class="need-puzzle-note"><span aria-hidden="true">✳</span> Plusieurs besoins&nbsp;? Chaque pièce peut compléter les autres.</p>
+      </div>
+      <aside class="need-detail" data-need-panel aria-live="polite" aria-atomic="true">
+        <p class="eyebrow eyebrow-orange">Votre point de départ</p>
+        <h3 data-need-title>Gagner en visibilité</h3>
+        <span class="need-detail-rule" aria-hidden="true"></span>
+        <p class="need-detail-description" data-need-description>Faisons le point sur votre présence en ligne et les opportunités de votre marque.</p>
+        <ul class="need-detail-points">
+          <li data-need-point-one>Un positionnement clair</li>
+          <li data-need-point-two>Une présence cohérente</li>
+          <li data-need-point-three>Des actions prioritaires</li>
+        </ul>
+        <a class="button button-primary track-cta need-detail-cta" data-track-event="primary_cta" data-need-cta href="{% url 'contact:project' %}?expertise=audit-digital-strategie-marketing"><span data-need-cta-label>Découvrir mon diagnostic</span><span aria-hidden="true">→</span></a>
+        <p class="need-detail-note">Un premier échange pour avancer.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="section method-why-section" aria-label="Notre méthode et les engagements de La Gazelle">
+  <div class="container method-why-grid">
+    <div class="method-panel">
+      <p class="eyebrow eyebrow-orange">Notre méthode</p>
+      <h2>Du premier échange au suivi.</h2>
+      <ol class="method-steps">
+        <li><span>01</span><div><h3>Comprendre</h3><p>Écouter vos besoins et vos objectifs.</p></div></li>
+        <li><span>02</span><div><h3>Prioriser</h3><p>Définir ensemble les actions utiles.</p></div></li>
+        <li><span>03</span><div><h3>Mettre en œuvre</h3><p>Agir avec une approche sur mesure.</p></div></li>
+        <li><span>04</span><div><h3>Mesurer et ajuster</h3><p>Améliorer les résultats au fil du temps.</p></div></li>
+      </ol>
+    </div>
+    <aside class="why-panel">
+      <p class="eyebrow eyebrow-orange">La Gazelle, l’Élan des Marques</p>
+      <h2>Pourquoi choisir La Gazelle&nbsp;?</h2>
+      <p class="why-intro">Nous adaptons les solutions à votre terrain et portons attention à leur utilité pour votre activité.</p>
+      <ul class="why-points">
+        <li>Une approche adaptée à chaque PME.</li>
+        <li>Le conseil relié à la mise en œuvre.</li>
+        <li>Un cadre, des livrables et un suivi définis avec vous.</li>
+        <li>Des compétences réunies selon votre projet.</li>
+      </ul>
+      <a class="why-link" href="{% url 'pages:about' %}">Découvrir le cabinet <span aria-hidden="true">→</span></a>
+    </aside>
+  </div>
+</section>
+
+{% if cases %}
+<section class="section case-preview" aria-labelledby="case-heading">
+  <div class="container">
+    <div class="section-heading"><div><p class="eyebrow eyebrow-orange">Réalisations autorisées</p><h2 id="case-heading">Des projets qui montrent comment nous travaillons.</h2></div><a class="text-link" href="{% url 'stories:cases' %}">Voir les réalisations <span aria-hidden="true">→</span></a></div>
+    <div class="case-grid">{% for case in cases %}<a class="case-card" href="{{ case.get_absolute_url }}"><span class="eyebrow">{% if case.client_name and case.client_name_authorized %}{{ case.client_name }}{% else %}Projet accompagné{% endif %}</span><h3>{{ case.title }}</h3><p>{{ case.objective|truncatechars:150 }}</p><span class="text-link">Découvrir le cas <span aria-hidden="true">→</span></span></a>{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+
+<section class="contact-banner-section" aria-labelledby="contact-banner-heading">
+  <div class="container">
+    <div class="contact-banner">
+      <img class="contact-banner-photo" src="{% static 'images/maquette1/conversation-strategie.jpg' %}" width="1672" height="941" loading="lazy" decoding="async" alt="Une consultante et un entrepreneur échangent autour de la stratégie de leur entreprise.">
+      <div class="contact-banner-copy">
+        <p class="eyebrow">Et si on en parlait&nbsp;?</p>
+        <h2 id="contact-banner-heading">Donnons un nouvel élan à votre communication.</h2>
+        <p>Vos ambitions méritent une stratégie claire. Construisons la vôtre ensemble.</p>
+        <a class="button button-primary track-cta" data-track-event="primary_cta" href="{% url 'contact:project' %}">Parlons de votre projet <span aria-hidden="true">↗</span></a>
+        <p class="contact-banner-note">Un premier échange pour clarifier vos besoins.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
